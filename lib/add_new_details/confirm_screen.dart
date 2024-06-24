@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/add_new_details/add_new_item.dart';
 import 'package:openfoodfacts/openfoodfacts.dart';
@@ -8,7 +10,7 @@ class ConfirmScreen extends StatefulWidget {
   const ConfirmScreen({super.key, required this.barcode, this.product});
 
   @override
-  _ConfirmScreenState createState() => _ConfirmScreenState();
+  State<ConfirmScreen> createState() => _ConfirmScreenState();
 }
 
 class _ConfirmScreenState extends State<ConfirmScreen> {

@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_function_literals_in_foreach_calls, avoid_print
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/util/services.dart';
 
@@ -109,7 +111,7 @@ class _NutritionFactsScreenState extends State<NutritionFactsScreen> {
                 ),
                 keyboardType: TextInputType.number,
               );
-            }).toList(),
+            }),
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: saveData,

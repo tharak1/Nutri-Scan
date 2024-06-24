@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/main_screens/homescreen.dart';
-import 'package:flutter_application_1/main_screens/temp_screen.dart';
 import 'package:flutter_application_1/recents/recent_screen.dart';
 
 class Navbar extends StatefulWidget {
@@ -21,7 +20,6 @@ class _NavbarState extends State<Navbar> {
   List<Widget> get _screens => [
         const RecentScreen(),
         const Homescreen(),
-        const TempScreen(),
       ];
 
   @override
@@ -45,10 +43,6 @@ class _NavbarState extends State<Navbar> {
           BottomNavigationBarItem(
             icon: Icon(Icons.qr_code_scanner_rounded),
             label: 'Scan',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.add_circle_outline),
-            label: 'Add Product',
           ),
         ],
       ),

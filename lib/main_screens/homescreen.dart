@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously, no_leading_underscores_for_local_identifiers, unused_element
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/add_new_details/confirm_screen.dart';
 import 'package:flutter_application_1/main_screens/scanned_result_screen.dart';

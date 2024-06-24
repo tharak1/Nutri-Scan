@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, avoid_print
 
 import 'package:flutter/material.dart'; // Import your Product model // Import your Recent model
 import 'package:flutter_application_1/main_screens/scanned_result_screen.dart';
@@ -25,7 +25,6 @@ class _RecentScreenState extends State<RecentScreen> {
 
   Future<void> fetchScannedProducts() async {
     List<Product> fetchedProducts = await StorageUtils.getScannedProducts();
-    print(fetchedProducts);
     setState(() {
       scannedProducts = fetchedProducts;
     });

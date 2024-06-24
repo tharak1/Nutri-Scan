@@ -95,9 +95,7 @@ class StorageUtils {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String>? scannedProductsJson = prefs.getStringList('scanned_products');
 
-    if (scannedProductsJson == null) {
-      scannedProductsJson = [];
-    }
+    scannedProductsJson ??= [];
 
     bool productExists = false;
 

@@ -8,10 +8,10 @@ class ImageSelectionScreen extends StatefulWidget {
   final String type;
   final String barcode;
   const ImageSelectionScreen({
-    Key? key,
+    super.key,
     required this.type,
     required this.barcode,
-  }) : super(key: key);
+  });
 
   @override
   State<ImageSelectionScreen> createState() => _ImageSelectionScreenState();

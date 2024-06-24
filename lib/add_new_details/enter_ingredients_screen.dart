@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/util/services.dart';
 import 'package:openfoodfacts/openfoodfacts.dart';
@@ -5,8 +7,7 @@ import 'package:openfoodfacts/openfoodfacts.dart';
 class EnterIngredientsScreen extends StatefulWidget {
   final String barcode;
 
-  const EnterIngredientsScreen({Key? key, required this.barcode})
-      : super(key: key);
+  const EnterIngredientsScreen({super.key, required this.barcode});
 
   @override
   State<EnterIngredientsScreen> createState() => _EnterIngredientsScreenState();
