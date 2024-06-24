@@ -43,7 +43,7 @@ class NutrientsAndIngredientsScreen extends StatelessWidget {
               trailing: Icon(Icons.arrow_forward_ios),
               onTap: () => Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => NutritionFactsScreen(barcode: barcode),
+                  builder: (context) => NutrientApp(barcode: barcode),
                 ),
               ),
             ),
@@ -52,7 +52,7 @@ class NutrientsAndIngredientsScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
-        child: Text("Next"),
+        child: Text("Done"),
       ),
     );
   }

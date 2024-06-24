@@ -42,42 +42,19 @@ class NewProductPage extends StatelessWidget {
               barcode: barcode,
             ),
             Spacer(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    // Handle cancel action here
-                  },
-                  style: ButtonStyle(
-                    backgroundColor:
-                        WidgetStateProperty.all<Color>(Colors.brown[200]!),
-                    foregroundColor:
-                        WidgetStateProperty.all<Color>(Colors.brown),
-                  ),
-                  child: Text('Cancel'),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => NutrientsAndIngredientsScreen(
-                                  barcode: barcode,
-                                )));
-                  },
-                  style: ButtonStyle(
-                    backgroundColor:
-                        WidgetStateProperty.all<Color>(Colors.brown[200]!),
-                    foregroundColor:
-                        WidgetStateProperty.all<Color>(Colors.brown),
-                  ),
-                  child: Text('Next'),
-                ),
-              ],
-            ),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => NutrientsAndIngredientsScreen(
+                        barcode: barcode,
+                      )));
+        },
+        child: Text('Next'),
       ),
     );
   }

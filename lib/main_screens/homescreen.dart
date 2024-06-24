@@ -59,8 +59,15 @@ class _HomescreenState extends State<Homescreen> {
           }
         } catch (e) {
           setState(() {
-            status = "Error";
-            _scannedResult = result;
+            if (result == '-1') {
+              status = "Do again";
+              _scannedResult = result;
+            } else {
+              setState(() {
+                status = "No Product";
+                _scannedResult = result;
+              });
+            }
           });
         }
       }

@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors, unnecessary_string_interpolations
-
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/add_new_details/confirm_screen.dart';
 import 'package:flutter_application_1/result_screens/environment_impact_screen.dart';
@@ -106,343 +104,305 @@ class _ScannedResultScreenState extends State<ScannedResultScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        shadowColor: Colors.grey,
-        elevation: 2.0,
-        surfaceTintColor: Colors.white,
+        title: Text(
+          'Product Details',
+          style: TextStyle(color: Colors.black),
+        ),
         backgroundColor: Colors.white,
-        title: Text('Product Details Screen'),
+        elevation: 2.0,
+        iconTheme: IconThemeData(color: Colors.black),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: 5.0,
-            ),
-            Stack(
-              children: [
-                widget.producDetails.imageFrontUrl != null
-                    ? Image.network(
-                        widget.producDetails.imageFrontUrl!,
-                        fit: BoxFit.cover,
-                        width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.height / 6,
-                      )
-                    : Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.height / 6,
-                        color: Colors.grey,
-                        child: Icon(Icons.image, size: 50, color: Colors.white),
-                      ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    widget.producDetails.productName ?? 'Unknown Product',
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 4),
-                  Text(
-                    widget.producDetails.quantity ?? 'Unknown Quantity',
-                    style: TextStyle(color: Colors.grey),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    widget.producDetails.brands ?? 'Unknown Brand',
-                    style: TextStyle(fontSize: 18),
-                  ),
-                  SizedBox(height: 8),
-                  Card(
-                    shadowColor: Colors.grey,
-                    elevation: 2.0,
-                    surfaceTintColor: Colors.grey,
-                    child: ListTile(
-                      leading: Icon(Icons.edit, color: Colors.grey),
-                      title: Text(
-                        "Edit",
-                        style: TextStyle(
-                            color: getEcoScoreColor(
-                                widget.producDetails.nutriscore)),
-                      ),
-                      trailing: Icon(Icons.arrow_forward_ios),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ConfirmScreen(
-                              barcode: widget.producDetails.barcode!,
-                              product: widget.producDetails,
-                            ),
-                          ),
-                        );
-                      },
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              widget.producDetails.imageFrontUrl != null
+                  ? Image.network(
+                      widget.producDetails.imageFrontUrl!,
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                      height: 200,
+                    )
+                  : Container(
+                      width: double.infinity,
+                      height: 200,
+                      color: Colors.grey[200],
+                      child: Icon(Icons.image, size: 50, color: Colors.white),
                     ),
-                  ),
-                  SizedBox(height: 8),
-                  if (widget.producDetails.nutriscore != null)
-                    Card(
-                      shadowColor: Colors.grey,
-                      elevation: 2.0,
-                      surfaceTintColor:
-                          getEcoScoreColor(widget.producDetails.nutriscore),
-                      child: ListTile(
-                        leading: Icon(Icons.info, color: Colors.grey),
-                        title: Text(
-                          widget.producDetails.nutritionData!
-                              ? 'Missing data to compute the Nutri-Score'
-                              : 'Nutritional Score : ${widget.producDetails.nutriscore!}',
-                          style: TextStyle(
-                              color: getEcoScoreColor(
-                                  widget.producDetails.nutriscore)),
-                        ),
-                      ),
-                    ),
-                  if (widget.producDetails.ecoscoreGrade != null)
-                    Card(
-                      shadowColor: Colors.grey,
-                      elevation: 2.0,
-                      surfaceTintColor: getEcoScoreColor(
-                          widget.producDetails.ecoscoreGrade!.toUpperCase()),
-                      child: ListTile(
-                        leading: Icon(Icons.eco),
-                        title: Text(
-                          "Eco-score : ${widget.producDetails.ecoscoreGrade!.toUpperCase()} ${getEcoScoreWarning(widget.producDetails.ecoscoreGrade!.toUpperCase())}",
-                          style: TextStyle(
-                              color: getEcoScoreColor(widget
-                                  .producDetails.ecoscoreGrade!
-                                  .toUpperCase())),
-                        ),
-                      ),
-                    ),
-                  if (widget.producDetails.categories != null)
-                    Card(
-                      shadowColor: Colors.grey,
-                      elevation: 2.0,
-                      child: ListTile(
-                        leading: Icon(Icons.category),
-                        title: Text(
-                          "Category ${widget.producDetails.categories}",
-                        ),
-                      ),
-                    ),
-                  SizedBox(height: 8),
-                  if (widget.producDetails.countries != null)
-                    Row(
-                      children: [
-                        Icon(Icons.circle, color: Colors.red, size: 12),
-                        SizedBox(width: 8),
-                        Text(
-                            "Country : ${widget.producDetails.countries!.toUpperCase().split(':')[1]}"),
-                      ],
-                    ),
-                  SizedBox(height: 16),
-                  Divider(),
-                  ListTile(
-                    title: Text('Nutrition'),
-                  ),
-                  if (widget.producDetails.nutrientLevels != null)
-                    ListTile(
-                      leading: Icon(Icons.bar_chart, color: Colors.grey),
-                      title: Text('Nutrient Levels'),
-                      trailing: Icon(Icons.arrow_forward_ios),
-                      onTap: () => Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => NutrientLevelsWidget(
-                              nutrientLevels:
-                                  widget.producDetails.nutrientLevels!),
-                        ),
-                      ),
-                    ),
-                  if (widget.producDetails.nutriments != null)
-                    ListTile(
-                      leading: Icon(Icons.quiz_sharp, color: Colors.grey),
-                      title: Text('Nutrition facts'),
-                      trailing: Icon(Icons.arrow_forward_ios),
-                      onTap: () => Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => NutrientInfoScreen(
-                              nutriments: widget.producDetails.nutriments!),
-                        ),
-                      ),
-                    ),
-                  ListTile(
-                    title: Text('Ingredients'),
-                  ),
-                  if (widget.producDetails.ingredients != null)
-                    ListTile(
-                      leading: Icon(Icons.warning, color: Colors.grey),
-                      title: Text(
-                          "${widget.producDetails.ingredients!.length} ingredients"),
-                      trailing: Icon(Icons.arrow_forward_ios),
-                      onTap: () => Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => IngredientsScreen(
-                            ingredientInfo: widget.producDetails.ingredients!,
-                            allergens: widget.producDetails.allergens!,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ListTile(
-                    title: Text('Food Processing'),
-                  ),
-                  if (widget.producDetails.novaGroup != null)
-                    ListTile(
-                      leading: Icon(Icons.propane_outlined,
-                          color:
-                              _getIconColor(widget.producDetails.novaGroup!)),
-                      title: Text(
-                        "Nova Score : ${widget.producDetails.novaGroup} ${_getStatus(widget.producDetails.novaGroup!)}",
-                        style: TextStyle(
-                            color:
-                                _getIconColor(widget.producDetails.novaGroup!)),
-                      ),
-                      trailing: Icon(Icons.arrow_forward_ios),
-                      onTap: () => Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => NovaScreen(
-                              novaScore:
-                                  widget.producDetails.novaGroup.toString()),
-                        ),
-                      ),
-                    ),
-                  ListTile(
-                    title: Text('Additives'),
-                  ),
-                  if (widget.producDetails.additives != null)
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ListTile(
-                          title: Text("Additives"),
-                        ),
-                        SingleChildScrollView(
-                          physics: NeverScrollableScrollPhysics(),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: List.generate(
-                              widget.producDetails.additives!.names.length,
-                              (index) => ListTile(
-                                leading: Icon(Icons.warning_amber,
-                                    color: Colors.grey),
-                                title: Text(
-                                  widget.producDetails.additives!.names[index],
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ListTile(
-                    title: Text('Ingredient analysis'),
-                  ),
-                  if (widget.producDetails.ingredientsAnalysisTags != null)
-                    if (widget.producDetails.ingredientsAnalysisTags!
-                            .palmOilFreeStatus !=
-                        null)
-                      ListTile(
-                        leading: Icon(
-                          Icons.water_drop_outlined,
-                          color: widget.producDetails.ingredientsAnalysisTags!
-                                      .palmOilFreeStatus !=
-                                  null
-                              ? Colors.red
-                              : null, // Default color
-                        ),
-                        title: Text(
-                          "${widget.producDetails.ingredientsAnalysisTags!.palmOilFreeStatus!.name}",
-                          style: TextStyle(
-                            color: widget.producDetails.ingredientsAnalysisTags!
-                                        .palmOilFreeStatus !=
-                                    null
-                                ? Colors.red
-                                : null, // Default color
-                          ),
-                        ),
-                      ),
-                  if (widget.producDetails.ingredientsAnalysisTags != null)
-                    if (widget.producDetails.ingredientsAnalysisTags!
-                            .veganStatus !=
-                        null)
-                      ListTile(
-                        leading: Icon(
-                          Icons.energy_savings_leaf,
-                          color: widget.producDetails.ingredientsAnalysisTags!
-                                      .veganStatus !=
-                                  null
-                              ? Colors.red
-                              : null, // Default color
-                        ),
-                        title: Text(
-                          "${widget.producDetails.ingredientsAnalysisTags!.veganStatus!.name}",
-                          style: TextStyle(
-                            color: widget.producDetails.ingredientsAnalysisTags!
-                                        .palmOilFreeStatus !=
-                                    null
-                                ? Colors.red
-                                : null, // Default color
-                          ),
-                        ),
-                      ),
-                  Divider(),
-                  ListTile(
-                    title: Text('Environment'),
-                  ),
-                  if (widget.producDetails.ecoscoreGrade != null)
-                    Card(
-                      shadowColor: Colors.grey,
-                      elevation: 2.0,
-                      surfaceTintColor: getEcoScoreColor(
-                          widget.producDetails.ecoscoreGrade!.toUpperCase()),
-                      child: ListTile(
-                        leading: Icon(Icons.eco),
-                        title: Text(
-                          "Eco-score : ${widget.producDetails.ecoscoreGrade!.toUpperCase()} ${getEcoScoreWarning(widget.producDetails.ecoscoreGrade!.toUpperCase())}",
-                          style: TextStyle(
-                              color: getEcoScoreColor(widget
-                                  .producDetails.ecoscoreGrade!
-                                  .toUpperCase())),
-                        ),
-                        trailing: Icon(Icons.arrow_forward_ios),
-                        onTap: () => Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => EcoScoreScreen(
-                                ecoScore: widget.producDetails.ecoscoreData!),
-                          ),
-                        ),
-                      ),
-                    ),
-                  if (hasMissingDetails)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 20.0),
-                      child: Center(
-                        child: ElevatedButton(
-                          onPressed: () {
-                            // Navigate to the screen to add a new product
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ConfirmScreen(
-                                    barcode: widget.producDetails.barcode!),
-                              ),
-                            );
-                          },
-                          child: Text('Add New Product'),
-                        ),
-                      ),
-                    ),
-                ],
+              SizedBox(height: 16),
+              Text(
+                widget.producDetails.productName ?? 'Unknown Product',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
-            ),
-          ],
+              SizedBox(height: 8),
+              Text(
+                widget.producDetails.quantity ?? 'Unknown Quantity',
+                style: TextStyle(color: Colors.grey),
+              ),
+              SizedBox(height: 8),
+              Text(
+                widget.producDetails.brands ?? 'Unknown Brand',
+                style: TextStyle(fontSize: 18, color: Colors.black87),
+              ),
+              SizedBox(height: 16),
+              _buildCard(
+                context,
+                title: 'Edit',
+                icon: Icons.edit,
+                color: Colors.blue,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ConfirmScreen(
+                        barcode: widget.producDetails.barcode!,
+                        product: widget.producDetails,
+                      ),
+                    ),
+                  );
+                },
+              ),
+              if (widget.producDetails.nutriscore != null)
+                _buildCard(
+                  context,
+                  title:
+                      'Nutritional Score: ${widget.producDetails.nutriscore!.toUpperCase()}',
+                  subtitle: getNutritionalWarning(
+                      widget.producDetails.nutriscore!.toUpperCase()),
+                  icon: Icons.info,
+                  color: getEcoScoreColor(
+                      widget.producDetails.nutriscore!.toUpperCase()),
+                ),
+              if (widget.producDetails.ecoscoreGrade != null)
+                _buildCard(
+                  context,
+                  title:
+                      'Eco-score: ${widget.producDetails.ecoscoreGrade!.toUpperCase()}',
+                  subtitle: getEcoScoreWarning(
+                      widget.producDetails.ecoscoreGrade!.toUpperCase()),
+                  icon: Icons.eco,
+                  color: getEcoScoreColor(
+                      widget.producDetails.ecoscoreGrade!.toUpperCase()),
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => EcoScoreScreen(
+                          ecoScore: widget.producDetails.ecoscoreData!),
+                    ),
+                  ),
+                ),
+              if (widget.producDetails.categories != null)
+                _buildCard(
+                  context,
+                  title: 'Category',
+                  subtitle: widget.producDetails.categories!,
+                  icon: Icons.category,
+                  color: Colors.orange,
+                ),
+              if (widget.producDetails.countries != null)
+                _buildRow(
+                  icon: Icons.location_on,
+                  text:
+                      'Country: ${widget.producDetails.countries!.toUpperCase().split(':')[1]}',
+                ),
+              Divider(),
+              _buildSectionTitle('Nutrition'),
+              if (widget.producDetails.nutrientLevels != null)
+                _buildListTile(
+                  context,
+                  title: 'Nutrient Levels',
+                  icon: Icons.bar_chart,
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => NutrientLevelsWidget(
+                          nutrientLevels: widget.producDetails.nutrientLevels!),
+                    ),
+                  ),
+                ),
+              if (widget.producDetails.nutriments != null)
+                _buildListTile(
+                  context,
+                  title: 'Nutrition facts',
+                  icon: Icons.quiz_sharp,
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => NutrientInfoScreen(
+                          nutriments: widget.producDetails.nutriments!),
+                    ),
+                  ),
+                ),
+              Divider(),
+              _buildSectionTitle('Ingredients'),
+              if (widget.producDetails.ingredients != null)
+                _buildListTile(
+                  context,
+                  title:
+                      '${widget.producDetails.ingredients!.length} ingredients',
+                  icon: Icons.warning,
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => IngredientsScreen(
+                        ingredientInfo: widget.producDetails.ingredients!,
+                        allergens: widget.producDetails.allergens!,
+                      ),
+                    ),
+                  ),
+                ),
+              Divider(),
+              _buildSectionTitle('Food Processing'),
+              if (widget.producDetails.novaGroup != null)
+                _buildCard(
+                  context,
+                  title: 'Nova Score: ${widget.producDetails.novaGroup}',
+                  subtitle: _getStatus(widget.producDetails.novaGroup!),
+                  icon: Icons.propane_outlined,
+                  color: _getIconColor(widget.producDetails.novaGroup!),
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => NovaScreen(
+                          novaScore: widget.producDetails.novaGroup.toString()),
+                    ),
+                  ),
+                ),
+              Divider(),
+              _buildSectionTitle('Additives'),
+              if (widget.producDetails.additives != null)
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: List.generate(
+                    widget.producDetails.additives!.names.length,
+                    (index) => ListTile(
+                      leading: Icon(Icons.warning_amber, color: Colors.grey),
+                      title: Text(
+                        widget.producDetails.additives!.names[index],
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ),
+                  ),
+                ),
+              Divider(),
+              _buildSectionTitle('Ingredient analysis'),
+              if (widget.producDetails.ingredientsAnalysisTags != null)
+                if (widget.producDetails.ingredientsAnalysisTags!
+                        .palmOilFreeStatus !=
+                    null)
+                  _buildCard(
+                    context,
+                    title: widget.producDetails.ingredientsAnalysisTags!
+                        .palmOilFreeStatus!.name,
+                    icon: Icons.water_drop_outlined,
+                    color: Colors.red,
+                  ),
+              if (widget.producDetails.ingredientsAnalysisTags != null)
+                if (widget.producDetails.ingredientsAnalysisTags!.veganStatus !=
+                    null)
+                  _buildCard(
+                    context,
+                    title: widget.producDetails.ingredientsAnalysisTags!
+                        .veganStatus!.name,
+                    icon: Icons.energy_savings_leaf,
+                    color: Colors.red,
+                  ),
+              Divider(),
+              _buildSectionTitle('Environment'),
+              if (widget.producDetails.ecoscoreGrade != null)
+                _buildCard(
+                  context,
+                  title:
+                      'Eco-score: ${widget.producDetails.ecoscoreGrade!.toUpperCase()}',
+                  subtitle: getEcoScoreWarning(
+                      widget.producDetails.ecoscoreGrade!.toUpperCase()),
+                  icon: Icons.eco,
+                  color: getEcoScoreColor(
+                      widget.producDetails.ecoscoreGrade!.toUpperCase()),
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => EcoScoreScreen(
+                          ecoScore: widget.producDetails.ecoscoreData!),
+                    ),
+                  ),
+                ),
+              if (hasMissingDetails)
+                Center(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ConfirmScreen(
+                              barcode: widget.producDetails.barcode!),
+                        ),
+                      );
+                    },
+                    child: Text('Add New Product'),
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
+    );
+  }
+
+  Widget _buildCard(BuildContext context,
+      {required String title,
+      String? subtitle,
+      required IconData icon,
+      required Color color,
+      VoidCallback? onTap}) {
+    return Card(
+      shadowColor: Colors.grey,
+      elevation: 2.0,
+      margin: EdgeInsets.symmetric(vertical: 8),
+      child: ListTile(
+        leading: Icon(icon, color: color),
+        title: Text(
+          title,
+          style: TextStyle(color: color),
+        ),
+        subtitle: subtitle != null
+            ? Text(
+                subtitle,
+                style: TextStyle(color: color),
+              )
+            : null,
+        trailing: onTap != null ? Icon(Icons.arrow_forward_ios) : null,
+        onTap: onTap,
+      ),
+    );
+  }
+
+  Widget _buildSectionTitle(String title) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Text(
+        title,
+        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+      ),
+    );
+  }
+
+  Widget _buildListTile(BuildContext context,
+      {required String title, required IconData icon, VoidCallback? onTap}) {
+    return ListTile(
+      leading: Icon(icon, color: Colors.grey),
+      title: Text(title),
+      trailing: onTap != null ? Icon(Icons.arrow_forward_ios) : null,
+      onTap: onTap,
+    );
+  }
+
+  Widget _buildRow({required IconData icon, required String text}) {
+    return Row(
+      children: [
+        Icon(icon, color: Colors.red, size: 12),
+        SizedBox(width: 8),
+        Text(
+          text,
+          style: TextStyle(color: Colors.black87),
+        ),
+      ],
     );
   }
 }

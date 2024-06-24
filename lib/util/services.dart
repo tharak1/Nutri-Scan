@@ -194,23 +194,23 @@ void addIngredientsToProduct(
   }
 }
 
-void addNutrientsToProduct(
-    {required Map<String, String> parameterMap,
-    required String barcode}) async {
-  // define the product to be added.
-  // more attributes available ...
-  Product myProduct = Product(
-    barcode: barcode,
-    nutriments: Nutriments.fromJson(parameterMap),
-  );
+// void addNutrientsToProduct(
+//     {required Map<String, String> parameterMap,
+//     required String barcode}) async {
+//   // define the product to be added.
+//   // more attributes available ...
+//   Product myProduct = Product(
+//     barcode: barcode,
+//     nutriments: Nutriments.fromJson(parameterMap),
+//   );
 
-  // a registered user login for https://world.openfoodfacts.org/ is required
-  User myUser = User(userId: 'tharak2', password: '#Since2004');
+//   // a registered user login for https://world.openfoodfacts.org/ is required
+//   User myUser = User(userId: 'tharak2', password: '#Since2004');
 
-  // query the OpenFoodFacts API
-  Status result = await OpenFoodAPIClient.saveProduct(myUser, myProduct);
-  print(result.statusVerbose);
-  if (result.status != 1) {
-    throw Exception('product could not be added: ${result.error}');
-  }
-}
+//   // query the OpenFoodFacts API
+//   Status result = await OpenFoodAPIClient.saveProduct(myUser, myProduct);
+//   print(result.statusVerbose);
+//   if (result.status != 1) {
+//     throw Exception('product could not be added: ${result.error}');
+//   }
+// }

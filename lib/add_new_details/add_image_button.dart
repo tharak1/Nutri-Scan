@@ -13,24 +13,27 @@ class AddImageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: ElevatedButton.icon(
-        onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => ImageSelectionScreen(
-                        type: imageUploadType,
-                        barcode: barcode,
-                      )));
-        },
-        style: ButtonStyle(
-          backgroundColor: WidgetStateProperty.all<Color>(Colors.brown[200]!),
-          foregroundColor: WidgetStateProperty.all<Color>(Colors.brown),
+    return SizedBox(
+      width: MediaQuery.of(context).size.width,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: ElevatedButton.icon(
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ImageSelectionScreen(
+                          type: imageUploadType,
+                          barcode: barcode,
+                        )));
+          },
+          style: ButtonStyle(
+            backgroundColor: WidgetStateProperty.all<Color>(Colors.brown[200]!),
+            foregroundColor: WidgetStateProperty.all<Color>(Colors.brown),
+          ),
+          icon: Icon(Icons.camera_alt, color: Colors.brown),
+          label: Text(text),
         ),
-        icon: Icon(Icons.camera_alt, color: Colors.brown),
-        label: Text(text),
       ),
     );
   }

@@ -1,159 +1,179 @@
-// ignore_for_file: avoid_function_literals_in_foreach_calls, avoid_print
+// ignore_for_file: prefer_const_constructors, use_build_context_synchronously, non_constant_identifier_names
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/util/services.dart';
+import 'package:openfoodfacts/openfoodfacts.dart';
 
-class NutritionFactsScreen extends StatefulWidget {
+class NutrientApp extends StatelessWidget {
   final String barcode;
-  const NutritionFactsScreen({super.key, required this.barcode});
-  @override
-  State<NutritionFactsScreen> createState() => _NutritionFactsScreenState();
-}
-
-class _NutritionFactsScreenState extends State<NutritionFactsScreen> {
-  final Map<String, TextEditingController> controllers = {
-    'energyKJ': TextEditingController(),
-    'energyKcal': TextEditingController(),
-    'fat': TextEditingController(),
-    'saturatedFat': TextEditingController(),
-    'carbohydrates': TextEditingController(),
-    'sugars': TextEditingController(),
-    'fiber': TextEditingController(),
-    'proteins': TextEditingController(),
-    'salt': TextEditingController(),
-  };
-
-  String servingSize = 'per 100g';
-
-  void saveData() {
-    final Map<String, String> parameterMap = {};
-    controllers.forEach((key, controller) {
-      String formattedKey = key;
-      if (servingSize == 'per serving') {
-        formattedKey = '${key}_serving';
-      }
-      parameterMap['nutriment_$formattedKey'] = controller.text;
-      addNutrientsToProduct(
-          parameterMap: parameterMap, barcode: widget.barcode);
-    });
-
-    // Remove '_per100g' and '_serving' suffixes from keys if present
-    final Map<String, String> cleanedParameterMap = {};
-    parameterMap.forEach((key, value) {
-      PerSize.values.forEach((option) {
-        final int pos = key.indexOf('_${option.offTag}');
-        if (pos != -1) {
-          key = key.substring(0, pos);
-        }
-      });
-      cleanedParameterMap[key] = value;
-    });
-
-    // Upload cleanedParameterMap to the server
-    print(cleanedParameterMap);
-  }
-
-  @override
-  void dispose() {
-    controllers.forEach((key, controller) {
-      controller.dispose();
-    });
-    super.dispose();
-  }
+  const NutrientApp({super.key, required this.barcode});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Nutrition Facts')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: ListView(
-          children: [
-            Text('Unknown product name, Unknown brand'),
-            SwitchListTile(
-              title: Text('Nutrition facts are not specified on the product'),
-              value: false,
-              onChanged: (value) {},
-            ),
-            ListTile(
-              title: Text('Nutrition facts photo'),
-              leading: Icon(Icons.camera_alt),
-              onTap: () {},
-            ),
-            TextField(
-              decoration: InputDecoration(labelText: 'Serving size'),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('per 100g'),
-                Switch(
-                  value: servingSize == 'per 100g',
-                  onChanged: (value) {
-                    setState(() {
-                      servingSize = value ? 'per 100g' : 'per serving';
-                    });
-                  },
-                ),
-                Text('per serving'),
-              ],
-            ),
-            ...controllers.keys.map((key) {
-              return TextField(
-                controller: controllers[key],
-                decoration: InputDecoration(
-                  labelText: _formatLabel(key),
-                  suffixText: key == 'energyKJ'
-                      ? 'kJ'
-                      : key == 'energyKcal'
-                          ? 'kcal'
-                          : 'g',
-                ),
-                keyboardType: TextInputType.number,
-              );
-            }),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: saveData,
-              child: Text('SAVE'),
-            ),
-          ],
-        ),
+      appBar: AppBar(
+        title: Text('Add Nutrients'),
+      ),
+      body: NutrientForm(
+        barcode: barcode,
       ),
     );
   }
+}
 
-  String _formatLabel(String key) {
-    switch (key) {
-      case 'energyKJ':
-        return 'Energy (kJ)';
-      case 'energyKcal':
-        return 'Energy (kcal)';
-      case 'fat':
-        return 'Fat';
-      case 'saturatedFat':
-        return 'Saturated fat';
-      case 'carbohydrates':
-        return 'Carbohydrates';
-      case 'sugars':
-        return 'Sugars';
-      case 'fiber':
-        return 'Fiber';
-      case 'proteins':
-        return 'Proteins';
-      case 'salt':
-        return 'Salt';
-      default:
-        return '';
+class NutrientForm extends StatefulWidget {
+  final String barcode;
+  const NutrientForm({super.key, required this.barcode});
+
+  @override
+  State<NutrientForm> createState() => _NutrientFormState();
+}
+
+class _NutrientFormState extends State<NutrientForm> {
+  final Map<Nutrient, TextEditingController> _controllers = {
+    Nutrient.energyKJ: TextEditingController(),
+    Nutrient.energyKCal: TextEditingController(),
+    Nutrient.fat: TextEditingController(),
+    Nutrient.saturatedFat: TextEditingController(),
+    Nutrient.carbohydrates: TextEditingController(),
+    Nutrient.sugars: TextEditingController(),
+    Nutrient.fiber: TextEditingController(),
+    Nutrient.salt: TextEditingController(),
+    Nutrient.cholesterol: TextEditingController(),
+    Nutrient.proteins: TextEditingController(),
+  };
+
+  final Map<Nutrient, String> _units = {
+    Nutrient.energyKJ: 'kJ',
+    Nutrient.energyKCal: 'kcal',
+    Nutrient.fat: 'g',
+    Nutrient.saturatedFat: 'g',
+    Nutrient.carbohydrates: 'g',
+    Nutrient.sugars: 'g',
+    Nutrient.fiber: 'g',
+    Nutrient.salt: 'g',
+    Nutrient.cholesterol: 'g',
+    Nutrient.proteins: 'g',
+  };
+
+  bool _per100g = true;
+  final TextEditingController _servingSizeController = TextEditingController();
+
+  void _toggleUnit(Nutrient nutrient) {
+    setState(() {
+      if (nutrient != Nutrient.energyKJ && nutrient != Nutrient.energyKCal) {
+        if (_units[nutrient] == 'g') {
+          _units[nutrient] = 'mg';
+        } else {
+          _units[nutrient] = 'g';
+        }
+      }
+    });
+  }
+
+  Future<void> _submit() async {
+    final nutriments = Nutriments.empty();
+
+    _controllers.forEach((nutrient, controller) {
+      final value = double.tryParse(controller.text);
+      if (value != null) {
+        nutriments.setValue(
+          nutrient,
+          _per100g ? PerSize.oneHundredGrams : PerSize.serving,
+          _units[nutrient] == 'mg' ? value / 1000 : value,
+        );
+      }
+    });
+
+    final barcode = widget.barcode;
+
+    try {
+      await addNutrientsToProduct(
+        entered_val: nutriments,
+        barcode: barcode,
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Product added successfully!')),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error adding product: $e')),
+      );
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        children: [
+          TextField(
+            controller: _servingSizeController,
+            decoration: InputDecoration(
+              labelText: 'Serving size',
+            ),
+            keyboardType: TextInputType.number,
+          ),
+          SwitchListTile(
+            title: Text(_per100g ? 'per 100g' : 'per serving'),
+            value: _per100g,
+            onChanged: (value) {
+              setState(() {
+                _per100g = value;
+              });
+            },
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: _controllers.length,
+              itemBuilder: (context, index) {
+                final nutrient = _controllers.keys.elementAt(index);
+                return Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _controllers[nutrient],
+                        decoration: InputDecoration(
+                          labelText: '${nutrient.offTag} (${_units[nutrient]})',
+                        ),
+                        keyboardType: TextInputType.number,
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.remove_red_eye),
+                      onPressed: () => _toggleUnit(nutrient),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
+          ElevatedButton(
+            onPressed: _submit,
+            child: Text('Submit'),
+          ),
+        ],
+      ),
+    );
   }
 }
 
-enum PerSize {
-  per100g('per 100g'),
-  perServing('per serving');
+Future<void> addNutrientsToProduct({
+  required Nutriments entered_val,
+  required String barcode,
+}) async {
+  User myUser = User(userId: 'tharak2', password: '#Since2004');
+  Product myProduct = Product(
+    barcode: barcode,
+    nutriments: entered_val,
+  );
 
-  final String offTag;
+  Status result = await OpenFoodAPIClient.saveProduct(myUser, myProduct);
 
-  const PerSize(this.offTag);
+  if (result.status == 1) {
+    debugPrint('Product added successfully');
+  } else {
+    throw Exception('Failed to add product: ${result.error}');
+  }
 }
