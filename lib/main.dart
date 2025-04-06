@@ -10,7 +10,7 @@ void main() {
     MaterialApp(
       theme: ThemeData(
         primarySwatch: Colors.brown,
-      ),
+      ), 
       home: Navbar(),
     ),
   );
